@@ -1,3 +1,10 @@
+
+# changes
+
+- second var added on left (hard coded)
+
+---
+
 # fullPage.js
 
 ![preview](https://raw.github.com/alvarotrigo/fullPage.js/master/examples/imgs/intro.png)
