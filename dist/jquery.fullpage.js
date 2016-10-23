@@ -488,6 +488,7 @@
                     setAutoScrolling(false, 'internal');
                     setFitToSection(false, 'internal');
                     $(SECTION_NAV_SEL).hide();
+                    $('.'+SECTION_NAV+'2').hide();
                     $body.addClass(RESPONSIVE);
                     $.isFunction( options.afterResponsive ) && options.afterResponsive.call( container, active);
                 }
@@ -496,6 +497,7 @@
                 setAutoScrolling(originals.autoScrolling, 'internal');
                 setFitToSection(originals.autoScrolling, 'internal');
                 $(SECTION_NAV_SEL).show();
+                $('.'+SECTION_NAV+'2').show();
                 $body.removeClass(RESPONSIVE);
                 $.isFunction( options.afterResponsive ) && options.afterResponsive.call( container, active);
             }
@@ -603,6 +605,7 @@
 
                 //Scrolls to the section when clicking the navigation bullet
                 .on('click touchstart', SECTION_NAV_SEL + ' a', sectionBulletHandler)
+                .on('click touchstart', '.'+SECTION_NAV+'2' + ' a', sectionBulletHandler)
 
                 //Scrolls the slider to the given slide destination for the given section
                 .on('click touchstart', SLIDES_NAV_LINK_SEL, slideBulletHandler)
@@ -826,10 +829,16 @@
         */
         function addVerticalNavigation(){
             $body.append('<div id="' + SECTION_NAV + '"><ul></ul></div>');
+            $body.append('<div id="' + SECTION_NAV + '" class="' + SECTION_NAV + '2"><ul></ul></div>');
             var nav = $(SECTION_NAV_SEL);
+            var nav2 = $('.'+SECTION_NAV+'2');
 
             nav.addClass(function() {
                 return options.showActiveTooltip ? SHOW_ACTIVE_TOOLTIP + ' ' + options.navigationPosition : options.navigationPosition;
+            });
+
+            nav2.addClass(function() {
+                return options.showActiveTooltip ? SHOW_ACTIVE_TOOLTIP + ' ' + 'left' : 'left';
             });
 
             for (var i = 0; i < $(SECTION_SEL).length; i++) {
@@ -850,13 +859,16 @@
                 li += '</li>';
 
                 nav.find('ul').append(li);
+                nav2.find('ul').append(li);
             }
 
             //centering it vertically
             $(SECTION_NAV_SEL).css('margin-top', '-' + ($(SECTION_NAV_SEL).height()/2) + 'px');
+            $('.'+SECTION_NAV+'2').css('margin-top', '-' + ($(SECTION_NAV_SEL).height()/2) + 'px');
 
             //activating the current active section
             $(SECTION_NAV_SEL).find('li').eq($(SECTION_ACTIVE_SEL).index(SECTION_SEL)).find('a').addClass(ACTIVE);
+            $('.'+SECTION_NAV+'2').find('li').eq($(SECTION_ACTIVE_SEL).index(SECTION_SEL)).find('a').addClass(ACTIVE);
         }
 
         /**
@@ -2117,10 +2129,13 @@
         function activateNavDots(name, sectionIndex){
             if(options.navigation){
                 $(SECTION_NAV_SEL).find(ACTIVE_SEL).removeClass(ACTIVE);
+                $('.'+SECTION_NAV+'2').find(ACTIVE_SEL).removeClass(ACTIVE);
                 if(name){
                     $(SECTION_NAV_SEL).find('a[href="#' + name + '"]').addClass(ACTIVE);
+                    $('.'+SECTION_NAV+'2').find('a[href="#' + name + '"]').addClass(ACTIVE);
                 }else{
                     $(SECTION_NAV_SEL).find('li').eq(sectionIndex).find('a').addClass(ACTIVE);
+                    $('.'+SECTION_NAV+'2').find('li').eq(sectionIndex).find('a').addClass(ACTIVE);
                 }
             }
         }
@@ -2714,8 +2729,11 @@
 
             $document
                 .off('click touchstart', SECTION_NAV_SEL + ' a')
+                .off('click touchstart', '.'+SECTION_NAV+'2' + ' a')
                 .off('mouseenter', SECTION_NAV_SEL + ' li')
+                .off('mouseenter', '.'+SECTION_NAV+'2' + ' li')
                 .off('mouseleave', SECTION_NAV_SEL + ' li')
+                .off('mouseleave', '.'+SECTION_NAV+'2' + ' li')
                 .off('click touchstart', SLIDES_NAV_LINK_SEL)
                 .off('mouseover', options.normalScrollElements)
                 .off('mouseout', options.normalScrollElements);
@@ -2746,6 +2764,7 @@
             });
 
             $(SECTION_NAV_SEL + ', ' + SLIDES_NAV_SEL +  ', ' + SLIDES_ARROW_SEL).remove();
+            $('.'+SECTION_NAV+'2' + ', ' + SLIDES_NAV_SEL +  ', ' + SLIDES_ARROW_SEL).remove();
 
             //removing inline styles
             $(SECTION_SEL).css( {
